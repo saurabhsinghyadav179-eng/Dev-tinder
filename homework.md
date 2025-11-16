@@ -74,3 +74,7 @@ Add the userAuth middle ware in profile API and a new sendConnectionRequest API
 Set the expiry of JWT token and cookies of 7days 
 Create userSchema method to get JWT 
 Create userSchema method to comparePassword (passswordInputByUser)
+
+
+
+-git hub commit
