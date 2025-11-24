@@ -78,3 +78,24 @@ Create userSchema method to comparePassword (passswordInputByUser)
 
 
 -git hub commit
+
+Explore tinder APIs
+Create a list of all API you can think of in Dev tinder
+Group multiple routes under respective routers 
+Read documentation for express.Router
+Create routes folder for managing auth .profile , request , routers
+Create authRouter , profileRouter, requestRouter
+Import these routers in app.js
+Create POST / logout API
+Create PATCH / profile/ password API=> forget password API
+Make you validate all date in every POST , PATCH apis
+
+Create copnnection Request Schema
+Send connection Request
+Proper validation of data
+Think about all corner cases 
+$or query $and query in mongoose
+Schema.pre("save") function
+Read more about indexes in mongoDB
+Why do we need index in MongoDB
+What is the advantages and disadvantages of creating?

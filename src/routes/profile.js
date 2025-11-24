@@ -1,11 +1,12 @@
 const express=require("express")
- const User = require("./model/userschema");
+ const User = require("../model/userschema");
 const bcrypt=require("bcrypt");
- const  {validationSignUp} =require("./utils/validation");
+ const  {validationSignUp} =require("../utils/validation");
 const profileRouter= express.Router();
+const {editProfile}=require("../utils/validation")
+const {userAuth} =require("../miidlewares/auth")
 
-
-app.get("/profile",userAuth,async(req, res)=>{
+profileRouter.get("/profile",userAuth,async(req, res)=>{
 
 try{
   const user=req.user;
@@ -15,29 +16,31 @@ try{
 catch(err){
   res.status(404).send("ERROR"+err.message)
 }
-// try{
 
-//  const { token } = req.cookies;
-//   if(!token){
-//     throw new Error ("invalid token");
+});
 
-//   }
-//   const decodedMessage= await jwt.verify(token, "webTinder123");
-//   const {_id}=decodedMessage;
+profileRouter.patch("/profile/edit", userAuth,async(req,res)=>{
+    try{
+       if(editProfile(req)){
+        throw new Error("edit field is  not valid ")
+       }
+       const loggedIn= req.user;
 
-//   const user = await User.findById(_id);
-//   if(!user){
-//     throw new Error("user does not exist")
-//   }
-//   res.send(user);
-// }
-   
+      
 
-//   catch (err) {
-//   console.error(err);
-//   res.status(400).send("ERROR: " + err.message);
-// }
-   
+       Object.keys(req.body).forEach((key)=>(loggedIn[key]=req.body[key]));
+
+     await  loggedIn.save();
+      
+       res.json({message:`${loggedIn.firstName}, your profile updated successfully`, 
+        data:loggedIn ,});
+       
+    }
+  catch(err){
+  res.status(404).send("ERROR "+err.message)
+
+    }
+
 });
 
 module.exports=profileRouter;
