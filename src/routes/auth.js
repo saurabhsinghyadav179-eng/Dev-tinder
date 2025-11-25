@@ -13,7 +13,7 @@ authRouter.post("/signUp" ,async (req, res)=>{
 
       // validation level api
      validationSignUp(req);
-     const {firstName,lastName, emailId,password}=req.body;
+     const {firstName,lastName, emailId,password, skills}=req.body;
    // encrypt the data
     const passwordHash=await bcrypt.hash(password,10);
     console.log(passwordHash);
@@ -24,6 +24,7 @@ authRouter.post("/signUp" ,async (req, res)=>{
       lastName,
       emailId,
       password:passwordHash,
+      skills,
     });
 
   

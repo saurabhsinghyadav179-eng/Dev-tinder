@@ -70,8 +70,48 @@ requestRouter.post("/request/send/:status/:toUserid", userAuth,async(req, res)=>
   }
 
 
-  }
+  });
+
+requestRouter.post("/request/review/:status/:requestId", userAuth, async(req, res)=>{
+ try{
+  const loggedIn=req.user;
+  const {status, requestId}=req.params;
+  // saurabh -> karan
+  //loggedIn= toUserId
+  const allowedStatus = ["accepted", "rejected"];
+    if (!allowedStatus.includes(status)) {
+      return res.status(400).json({
+        error: "Invalid status! Only 'accepted' or 'rejected' allowed."
+      });
+    }
+
+    const connectionRequest=await  UserRequest.findOne({
+      _id:requestId,
+      toUserid:loggedIn._id,
+      status:"interested",
+
+    })
+    if(!connectionRequest){
+      return res
+       .status(404).json({message: "connection request is not found "})
+    }
+
+    connectionRequest.status=status;
+
+
+    const data= await connectionRequest.save();
+    res.json({message :"connection request"+ status, data})
+
+
+ }catch(err){
+    res.status(404).send("ERROR: "+ err.message)
+  } 
+ 
   
-)
+
+
+ 
+
+})
 
 module.exports=requestRouter;
