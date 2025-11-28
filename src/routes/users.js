@@ -2,6 +2,7 @@ const express=require("express");
 
 const UserRequest = require("../model/connectionReq");
 const { userAuth } = require("../miidlewares/auth");
+const User= require("../model/userschema")
 const safeData= "firstName lastName age about skills "
 const userRouter=express.Router();
 
@@ -24,7 +25,7 @@ userRouter.get("/user/request/recieve", userAuth,async (req, res)=>{
      }
 })
 
-// get all connection which is connected
+// get all connections which is connected
 
 userRouter.get("/user/connections", userAuth, async (req, res)=>{
     try{
@@ -33,7 +34,7 @@ userRouter.get("/user/connections", userAuth, async (req, res)=>{
         const connectionRequests=await UserRequest.find({
             $or:[
                {toUserid:loggedIn._id, status:"accepted"},
-               {fromUserid:loggedIn._id , status:" accepted"},
+               {fromUserid:loggedIn._id , status:"accepted"},
         ]
         }).populate("fromUserid",safeData)
         .populate("toUserid", safeData);
@@ -50,5 +51,46 @@ userRouter.get("/user/connections", userAuth, async (req, res)=>{
         res.status(404).send("connection not found")
     }
 })
+// creating feed API
+userRouter.get("/feed", userAuth, async (req,res)=>{
+  try{
+
+    const loggedIn=req.user;
+
+    const page= parseInt(req.query.page)
+    let limit=parseInt(req.query.limit)
+    limit=limit>50 ?50 :limit;
+    const skip=(page-1)*limit;
+
+    // finding the sender and reciever  userId
+    const connectionRequests=await UserRequest.find({
+     $or: [{toUserid:loggedIn._id},{fromUserid:loggedIn._id} ]
+    }).select( "fromUserid" )
+    .select("toUserid");
+
+    const hideFromFeed= new Set();
+      connectionRequests.forEach((req) => {
+      hideFromFeed.add(req.fromUserid.toString())
+      hideFromFeed.add(req.toUserid.toString())
+    });
+    console.log(hideFromFeed);
+
+   const users= await User.find({
+     $and: [{
+      _id:{$nin:[...hideFromFeed]}},
+      {_id:{$ne : loggedIn._id}
+     }]
+   })
+   .select(safeData)
+   .skip(skip)
+   .limit(limit);
+
+    console.log(users);
+    res.send(users);
+
+  }catch(err){
+    res.status(404).json({message  :err.message})
+  }
+});
 
 module.exports=userRouter;

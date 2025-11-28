@@ -74,11 +74,11 @@ requestRouter.post("/request/send/:status/:toUserid", userAuth,async(req, res)=>
 
 requestRouter.post("/request/review/:status/:requestId", userAuth, async(req, res)=>{
  try{
-  const loggedIn=req.user;
-  const {status, requestId}=req.params;
-  // saurabh -> karan
-  //loggedIn= toUserId
-  const allowedStatus = ["accepted", "rejected"];
+  const fromUserid = req.user._id.toString().trim();
+    const requestId = req.params.requestId.trim();
+    let status = req.params.status.toLowerCase().trim(); 
+  
+    const allowedStatus = ["accepted", "rejected"];
     if (!allowedStatus.includes(status)) {
       return res.status(400).json({
         error: "Invalid status! Only 'accepted' or 'rejected' allowed."
@@ -87,7 +87,7 @@ requestRouter.post("/request/review/:status/:requestId", userAuth, async(req, re
 
     const connectionRequest=await  UserRequest.findOne({
       _id:requestId,
-      toUserid:loggedIn._id,
+      toUserid:fromUserid,
       status:"interested",
 
     })
@@ -104,13 +104,9 @@ requestRouter.post("/request/review/:status/:requestId", userAuth, async(req, re
 
 
  }catch(err){
-    res.status(404).send("ERROR: "+ err.message)
+   res.status(500).json({ error: "ERROR: " + err.message });
+
   } 
- 
-  
-
-
- 
 
 })
 

@@ -99,3 +99,14 @@ Schema.pre("save") function
 Read more about indexes in mongoDB
 Why do we need index in MongoDB
 What is the advantages and disadvantages of creating?
+
+
+Notes:
+
+Pagination 
+
+/feed?page=1&limit=10 => 1-10 => .skip(0)  & .limit(10)
+/feed?page=2&limit=10 => 10-20 => .skip(10) & .limit(10)
+/feed?page=3&limit=10  => 20-30 => .skip(20) & .limit(10)
+
+skip=(page-1)* limit
