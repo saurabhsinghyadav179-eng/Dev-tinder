@@ -42,6 +42,10 @@ const userSchema= new mongoose.Schema({
         type:String,
         default:"this is default value "
     },
+    image:{
+        type:String,
+        default:"https://cdn.pixabay.com/photo/2023/06/01/14/11/ai-generated-8033671_960_720.png"
+    },
     skills:{
         type:[String]
     },

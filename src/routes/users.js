@@ -3,7 +3,7 @@ const express=require("express");
 const UserRequest = require("../model/connectionReq");
 const { userAuth } = require("../miidlewares/auth");
 const User= require("../model/userschema")
-const safeData= "firstName lastName age about skills "
+const safeData= "firstName lastName age about skills image"
 const userRouter=express.Router();
 
 // get all pending connection request for the loggedin user
@@ -67,17 +67,17 @@ userRouter.get("/feed", userAuth, async (req,res)=>{
      $or: [{toUserid:loggedIn._id},{fromUserid:loggedIn._id} ]
     }).select( "fromUserid" )
     .select("toUserid");
-
+    console.log("userRequest: "+connectionRequests);
     const hideFromFeed= new Set();
       connectionRequests.forEach((req) => {
       hideFromFeed.add(req.fromUserid.toString())
       hideFromFeed.add(req.toUserid.toString())
     });
-    console.log(hideFromFeed);
+    console.log("hide "+[...hideFromFeed]);
 
    const users= await User.find({
-     $and: [{
-      _id:{$nin:[...hideFromFeed]}},
+     $and: [
+      {_id:{$nin:[...hideFromFeed]}},
       {_id:{$ne : loggedIn._id}
      }]
    })

@@ -51,11 +51,11 @@ authRouter.post("/login" ,async (req, res)=>{
   if(isPasswordValid){
     // create jwt cookie 
 
-  const token = jwt.sign({ _id: user._id }, "webTinder123", { expiresIn: "1h" });
+  const token = jwt.sign({ _id: user._id }, "webTinder123", { expiresIn: "1d" });
 
    console.log (token);
    res.cookie( "token", token)
-   res.send("login successfulll!!!")
+   res.send(user);
       
     }else{
    throw new Error ("password is not valid ")
