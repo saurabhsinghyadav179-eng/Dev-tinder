@@ -13,7 +13,7 @@ userRouter.get("/user/request/recieve", userAuth,async (req, res)=>{
        const connectionRequest=await UserRequest.find({
         toUserid:loggedIn._id,
          status:"interested"
-      }).populate("fromUserid", "firstName  lastName")
+      }).populate("fromUserid", "firstName  lastName image age gender about")
 
       res.json({
         message:"data fetched successfully",

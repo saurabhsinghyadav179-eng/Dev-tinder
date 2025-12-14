@@ -4,6 +4,7 @@
 
 const userAuth=async (req, res, next)=>{
     try{
+         
         const {token}=req.cookies;
      if(!token){
        return res.status(401).send("please login again");
@@ -20,10 +21,13 @@ const userAuth=async (req, res, next)=>{
      req.user=user;
      next();
     }
-    catch (err){
-       res.status(404).send("ERROR"+err.message);
-    }
-   
+    catch (err) {
+    return res.status(401).json({
+    error: "Unauthorized",
+    message: err.message,
+  });
+}
+
 }
 
    

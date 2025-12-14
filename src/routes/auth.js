@@ -28,14 +28,23 @@ authRouter.post("/signUp" ,async (req, res)=>{
     });
 
   
-      await user.save();
-      res.send("data added succesfully");  
+    const userSaved=  await user.save();
+    const token =await userSaved.getJWT();
+     res.cookie("token",token,{
+        expires: new Date(Date.now()+8*3600000)
+    });
+   
+   res.json({message:"data added succesfully", data:userSaved});  
       
 
     }
     catch (err) {
-    res.status(404).send("ERROR1: "+err.message)
-  }
+  return res.status(401).json({
+    error: "Unauthorized",
+    message: err.message,
+  });
+}
+
 });
 
 // login api

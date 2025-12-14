@@ -1,5 +1,6 @@
 const mongoose= require ("mongoose")
 const validator=require("validator")
+const jwt = require("jsonwebtoken");
 const userSchema= new mongoose.Schema({
     firstName :{
         type:String,
@@ -56,13 +57,22 @@ const userSchema= new mongoose.Schema({
             throw new Error("password is not strong  :"+value)
         } 
         }
-    }
+    },
+
    
 },
 {
 timestamps:true,
 }
 );
+
+userSchema.methods.getJWT = function () {
+    return jwt.sign(
+        { _id: this._id },
+        "webTinder123",     
+        { expiresIn: "1d" }
+    );
+};
     
 
 module.exports = mongoose.model("User", userSchema);
