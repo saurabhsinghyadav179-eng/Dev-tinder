@@ -9,7 +9,7 @@ const userAuth=async (req, res, next)=>{
      if(!token){
        return res.status(401).send("please login again");
      }
-     const isDecoded=await  jwt.verify(token, "webTinder123" )
+     const isDecoded=await  jwt.verify(token, process.env.JWT_SECRET )
      const {_id}=isDecoded;
     
      const user =await User.findById(_id);

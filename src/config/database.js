@@ -2,10 +2,12 @@ const mongoose = require("mongoose");
 
 
 const connectDB =async ()=>{
+    console.log(process.env.DB_CONNECTION_SECRET);
 mongoose.connect(
-
-    "mongodb+srv://NamasteNode:deCqE9X6Um0RZlek@namastenode.zysp5tx.mongodb.net/devTinder"
+      
+    process.env.DB_CONNECTION_SECRET
 );
+ 
  
 };
 
